@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -60,11 +58,31 @@ public class JobData {
      *
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
-     *
-     * @param column   Column that should be searched.
      * @param value Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> job : allJobs) {
+
+            for (Map.Entry<String, String> jobEntry : job.entrySet()) {
+                String aValue = jobEntry.getValue();
+
+                if (aValue.toLowerCase().contains(value.toLowerCase())) {
+                    jobs.add(job);
+                    break;
+                }
+
+            }
+
+        }
+
+        return jobs;
+    }
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
 
         // load data, if not already loaded
@@ -76,7 +94,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
